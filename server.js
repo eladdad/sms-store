@@ -1,7 +1,7 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const app = express();
-
 const server = require('http').Server(app);
 
 console.log(process.env);
