@@ -21,8 +21,10 @@ mongoose.connect(dbUri, {
 
 app.post('/', (req, res) => {
     
-  if(!req.body.originator || !req.body.payload)
+  if(!req.body.originator || !req.body.payload) {
+    console.log('missing fields');
     res.status(400).send();
+  }
   else {
     var newMessage = new Message();
 
@@ -30,10 +32,15 @@ app.post('/', (req, res) => {
     newMessage.payload = req.body.payload;
 
     newMessage.save(err => {
-      if(err)
+      if(err) {
+        console.log('error saving to db');
+        console.log(err);
         res.status(500).send();
-      else
+      }
+      else {
+        console.log('msg saved to db');
         res.status(200).send();
+      }
     });
   }
 });
