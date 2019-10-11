@@ -1,12 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+const Message = require('./models/Message');
+
 const app = express();
 app.use(express.json());
 
 const server = require('http').Server(app);
-
-console.log(process.env);
 
 const port = process.env.PORT || 3000;
 const dbUri = process.env.DB_URI;
@@ -20,9 +20,22 @@ mongoose.connect(dbUri, {
 
 
 app.post('/', (req, res) => {
-    console.log(req.body);
+    
+  if(!req.body.originator || !req.body.payload)
+    res.status(400).send();
+  else {
+    var newMessage = new Message();
 
-    res.status(200).send();
+    newMessage.sender = req.body.originator;
+    newMessage.payload = req.body.payload;
+
+    newMessage.save(err => {
+      if(err)
+        res.status(500).send();
+      else
+        res.status(200).send();
+    });
+  }
 });
 
 
